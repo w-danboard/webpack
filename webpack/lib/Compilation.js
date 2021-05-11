@@ -39,7 +39,7 @@ class Compilation extends Tapable {
    * @param {*} context 根目录
    * @param {*} entry 入口模块的相对路径 ./src/index.js
    * @param {*} name 入口的名字 main
-   * @param {*} callback 编译完成的回调
+   * @param {*} callback 编译完成回调
    */
   addEntry (context, entry, name, finalCallback) {
     this._addModuleChain(context, entry, name, false, (err, module) => {

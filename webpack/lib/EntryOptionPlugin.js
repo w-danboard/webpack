@@ -15,7 +15,7 @@ class EntryOptionPlugin {
      * @param entry入 口文件相对路径
      */
     compiler.hooks.entryOption.tap('EntryOptionPlugin', (context, entry) => {
-      itemToPlugin(context, entry, 'main').apply(compiler)
+      itemToPlugin(context, entry, 'main').apply(compiler);
     });
   }
 }
