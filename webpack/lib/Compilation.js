@@ -1,42 +1,36 @@
+const fs = require('fs');
 const path = require('path');
 let async = require('neo-async');
 const { Tapable, SyncHook } = require('tapable');
 const NormalModuleFactory = require('./NormalModuleFactory');
 const normalModuleFactory = new NormalModuleFactory();
+const Parser = require('./Parser');// 所有模块共享一个Parser
+let parser = new Parser();
 const Chunk = require('./Chunk');
 const ejs = require('ejs');
-const fs = require('fs');
 const mainTemplate = fs.readFileSync(path.join(__dirname, 'templates', 'asyncMain.ejs'), 'utf8');
 const mainRender = ejs.compile(mainTemplate); // 模板经过编译会返回一个函数，向里面传参即可
 const chunkTemplate = fs.readFileSync(path.join(__dirname, 'templates', 'chunk.ejs'), 'utf8');
-const chunkRender = ejs.compile(chunkTemplate); // 模板经过编译会返回一个函数，向里面传参即可
+const chunkRender = ejs.compile(chunkTemplate);
 
-// 所有模块共享一个Parser
-const Parser = require('./Parser');
-let parser = new Parser();
 class Compilation extends Tapable {
   constructor (compiler) {
     super();
     this.compiler = compiler; // 编译器对象
-    this.options = compiler.options; // 选项一样
+    this.options = compiler.options; // 配置参数
     this.context = compiler.context; // 根目录
-    /**
-     * 为啥不是直接在这个文件引入fs直接使用 而是利用inputFileSystem呢？
-     * 答：为了灵活，可配置。因为在热更新的时候，读文件写文件用的是(迈瑞fs。。。)
-     */
     this.inputFileSystem = compiler.inputFileSystem; // 读取文件模块fs
     this.outputFileSystem = compiler.outputFileSystem; // 写入文件的模块fs
-    this.entries = []; // 入口的数组， 这里放着所有的入口模块
-    this.modules = []; // 模块的数组， 这里放着所有的模块
-    this.chunks = []; // 这里放着所有的代码块
-    this.files = []; // 这里放着本次编译所有产出的文件名
-    this.assets = {}; // 存放着生成资源 key是文件名 值是文件的内容
+    this.entries = []; // 入口信息
+    this.modules = []; // 模块信息
+    this.chunks = []; // 代码块信息
+    this.files = []; // 文件信息
+    this.assets = {}; // 生成资源 key是文件名 值是文件的内容
     this.hooks = {
-      // 当你成功构建完成一个模块后就会触发此钩子
-      succeedModule: new SyncHook(['module']),
       seal: new SyncHook(),
       beforeChunks: new SyncHook(),
-      afterChunks: new SyncHook()
+      afterChunks: new SyncHook(),
+      succeedModule: new SyncHook(['module'])
     }
   }
 
