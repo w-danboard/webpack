@@ -51,7 +51,7 @@ class Compiler extends Tapable {
    * @param {*} onCompiled 最终的回调
    */
   compile (onCompiled) {
-    const params = this.newCompilationParams(); // 创建
+    const params = this.newCompilationParams(); // Compilation对象参数
     this.hooks.beforeCompile.callAsync(params, err => {
       this.hooks.compile.call(params);
       // 创建一个新的compilation对象
@@ -78,8 +78,8 @@ class Compiler extends Tapable {
 
   newCompilation (params) {
     const compilation = this.createCompilation(); // 创建Compilation对象
-    this.hooks.thisCompilation.call(compilation, params);
-    this.hooks.compilation.call(compilation, params);
+    this.hooks.thisCompilation.call(compilation, params); // 开始一次新的编译
+    this.hooks.compilation.call(compilation, params); // 创建完成一个新的compilation
     return compilation;
   }
 
@@ -104,7 +104,6 @@ class Compiler extends Tapable {
     this.hooks.emit.callAsync(compilation, err => {
       // 先创建输出目录dist，在写入文件
       mkdirP(this.options.output.path).then(made => {
-        console.log('made ===>')
         emitFiles()
       });
     })

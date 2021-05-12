@@ -11,7 +11,7 @@ class SingleEntryPlugin {
       const { context, entry, name} = this;
       /**
        * 编译入口文件和它的依赖
-       * context 根目录的绝对路径
+       * context 根目录
        * entry 入口模块路径 ./src/index.js
        * name 人口的名字 main
        * callback 最终的回调

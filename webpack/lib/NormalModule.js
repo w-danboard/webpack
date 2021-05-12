@@ -1,7 +1,7 @@
 const path = require('path');
 const types = require('babel-types');
-const generate = require('babel-generator').default;
-const traverse = require('babel-traverse').default;
+const generate = require('babel-generator').default; // 语法树转为代码
+const traverse = require('babel-traverse').default; // 遍历语法树
 const async = require('neo-async');
 class NormalModule {
   constructor ({ name, context, rawRequest, resource, parser, moduleId, async }) {
@@ -31,7 +31,7 @@ class NormalModule {
    *  3. 把这个js模块代码经过parser的处理转成一个抽象语法树AST
    *  4. 分析AST里面的依赖，也就是找require,import节点，分析语法树
    *  5. 递归的编译依赖的模块
-   *  6. 不停的依次递归执行上面5步，知道所有的模块都编译完成为止
+   *  6. 不停的依次递归执行上面5步，直到所有的模块都编译完成为止
    * @param {*} compilation 
    * @param {*} callback 
    */

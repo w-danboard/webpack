@@ -6,7 +6,7 @@ class WebpackOptionsApply {
     new EntryOptionPlugin().apply(compiler);
     /**
      * 触发entryOption钩子
-     * options.context 根目录的路径
+     * options.context 根目录
      * options.entry 入口文件'./src/index.js'
      */
     compiler.hooks.entryOption.call(options.context, options.entry);

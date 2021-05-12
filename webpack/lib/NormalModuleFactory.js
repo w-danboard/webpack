@@ -1,6 +1,7 @@
 const NormalModule = require('./NormalModule');
+
+// 模块工厂
 class NormalModuleFactory {
-  // 创建一个普通模块并返回
   create(data) {
     return new NormalModule(data);
   }
