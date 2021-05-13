@@ -122,6 +122,15 @@ class NormalModule {
   doBuild (compilation, callback) {
     this.getSource(compilation, (err, source) => {
       // TODO loader转换...
+      // 获取所有配置的Loader
+      // let rules = this.options.module.rules;
+      // let loaders = [];
+      // 源码里多个入口可以一步并行的 （没有处理loader是对象的情况）
+      // for (let i = loaders.length - 1; i >= 0; i--) {
+      //   console.log(loaders.length, '==>', i)
+      //   targetSourceCode = require(loaders[i])(targetSourceCode);
+      //   console.log(targetSourceCode)
+      // }
       this._source = source;
       callback();
     });
