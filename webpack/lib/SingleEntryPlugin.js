@@ -6,7 +6,7 @@ class SingleEntryPlugin {
   }
 
   apply (compiler) {
-    // 监听make钩子
+    // 监听make 开始编译的钩子
     compiler.hooks.make.tapAsync('SingleEntryPlugin', (compilation, callback) => {
       const { context, entry, name} = this;
       /**

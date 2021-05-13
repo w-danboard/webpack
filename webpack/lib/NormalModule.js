@@ -26,7 +26,7 @@ class NormalModule {
   /**
    * 编译本模块
    *  1. 先从硬盘上把模块内容读出来，读成一个文本
-   *  2. 可能它不是一个js模块，所以会可能要走loader的转换，最终肯定要跌到一个js模块，如果得不到就报错了
+   *  2. 可能它不是一个js模块，所以会可能要走loader的转换，最终肯定要得到一个js模块，如果得不到就报错
    *  3. 把这个js模块代码经过parser的处理转成一个抽象语法树AST
    *  4. 分析AST里面的依赖，也就是找require,import节点，分析语法树
    *  5. 递归的编译依赖的模块
@@ -44,47 +44,45 @@ class NormalModule {
         CallExpression: (nodePath) => {
           let node = nodePath.node; // 获取节点
           if (node.callee.name === 'require') { // 如果方法名是require方法的话
-            // 1.把方法名用require改成了__webpack_require__
+            // 把方法名用require改成了__webpack_require__
             node.callee.name = '__webpack_require__';
-            let moduleName = node.arguments[0].value; // 1.模块的名称
+            let moduleName = node.arguments[0].value; // 模块的名称
             // 依赖的绝对路径
             let depResource;
-            // 如果说模块的名字是以.开头，说明是一个本地模块，或者说用户自动定义模块
-            if (moduleName.startsWith('.')) {
-              // 2.获得了可能的扩展名
+            // 模块的名字是以.开头，说明是一个本地模块，或者说用户自动定义模块
+            if (moduleName.startsWith('.')) { 
+              // 获取模块扩展名
               let extName = moduleName.split(path.posix.sep).pop().indexOf('.') == -1 ? '.js' : '';
-              // 3.获取依赖模块(./src/title.js)的绝对路径
+              // 获取依赖模块的绝对路径
               depResource = path.posix.join(path.posix.dirname(this.resource), moduleName + extName);
             } else { // 否则是一个第三方模块，也就是放在node_modules里面的
               // /Users/wanglin/Desktop/webpack-not-del/hand-webpack/node_modules/isarray/index.js
               depResource = require.resolve(path.posix.join(this.context, 'node_modules', moduleName));
               depResource = depResource.replace(/\\/g, '/'); // 把window里的\转成/
             }
-            // 4.获取依赖的模块ID ./ + 从根目录触发到依赖模块的绝对路径的相对路径
-            // let depModuleId = './' + path.posix.relative(this.context, depResource);
 
             // depResource = /Users/wanglin/Desktop/webpack-not-del/hand-webpack/node_modules/isarray/index.js
             // this.context = /Users/wanglin/Desktop/webpack-not-del/hand-webpack
             // depModuleId = ./node_modules/isarray/index.js
             let depModuleId = '.' + depResource.slice(this.context.length);
-            console.log('depModuleId', depModuleId)
             // 把require模块路径从./title.js变成了./src/title.js
             node.arguments = [ types.stringLiteral(depModuleId) ];
+            console.log([ types.stringLiteral(depModuleId) ], '===>')
             this.dependencies.push({
               name: this.name, // main
               context: this.context, // 根目录
-              rawRequest: moduleName, // 模块的相对路径 原始路径
-              moduleId: depModuleId, // 模块ID 它是一个相对于根目录的相对路径
-              resource: depResource // 依赖模块的绝对路径
+              rawRequest: moduleName,  // 模块的相对路径 原始路径
+              moduleId: depModuleId,   // 模块ID 它是一个相对于根目录的相对路径
+              resource: depResource    // 依赖模块的绝对路径
             });
             // 判断这个节点CallExpression它的callee是不是import类型
           } else if (types.isImport(node.callee)) {
-            let moduleName = node.arguments[0].value; // 1.模块的名称 ./title.js
-            // 2.获取可能的扩展名
+            let moduleName = node.arguments[0].value; // 模块的名称 ./title.js
+            // 获取可能的扩展名
             let extName = moduleName.split(path.posix.sep).pop().indexOf('.') == - 1 ? '.js' : '';
-            // 3.获取依赖的模块的绝对路径
+            // 获取依赖的模块的绝对路径
             let depResource = path.posix.join(path.posix.dirname(this.resource), moduleName + extName);
-            // 4.依赖的模块ID ./ +  从根目录触发到依赖模块的绝对路径的相对路径 ./src/title.js
+            // 依赖的模块ID ./ +  从根目录出发到依赖模块的绝对路径的相对路径 ./src/title.js
             let depModuleId = './' + path.posix.relative(this.context, depResource);
             // webpackChunkName: 'title'
             let chunkName = '0';
@@ -113,17 +111,17 @@ class NormalModule {
         let { context, entry, name, async } = block;
         compilation._addModuleChain(context, entry, name, async, done);
       }, callback);
-      // callback();
     })
   }
   
   /**
-   * 1. 读取模块的源代码
+   * 读取模块的源代码
    * @param {*} compilation 
    * @param {*} callback 
    */
   doBuild (compilation, callback) {
     this.getSource(compilation, (err, source) => {
+      // TODO loader转换...
       this._source = source;
       callback();
     });

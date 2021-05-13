@@ -72,12 +72,12 @@ class Compilation extends Tapable {
    * 创建并编译一个模块
    * @param {*} data 编译的模块信息
    * @param {*} addEntry 是否是入口模块, 是就添加到entries里
-   * @param {*} callback 编译完成的最终回调
+   * @param {*} callback 编译完成的最终回调 // TODO 源码为啥搞这么多回调函数,不直接用Promise?
    */
   createModule (data, addEntry, callback) { 
     let module = normalModuleFactory.create(data); // 通过模块工厂 创建一个模块
     addEntry && addEntry(module);
-    this.modules.push(module); // 添加模块
+    this.modules.push(module);
     const afterBuild = (err, module) => {
       // 编译依赖的模块, 大于0说明有依赖
       if (module.dependencies.length > 0) {
@@ -135,7 +135,7 @@ class Compilation extends Tapable {
     for (const entryModule of this.entries) {
       const chunk = new Chunk(entryModule); // 根据入口模块得到一个代码块
       this.chunks.push(chunk);
-      // 模块名称和chunk一样的模块，赋给chunk.modules
+      // 过滤所有模块，找出名称与chunk一样的模块，组成一个数组赋给chunk.modules
       chunk.modules = this.modules.filter(module => module.name === chunk.name);
     }
     this.hooks.afterChunks.call(this.chunks);

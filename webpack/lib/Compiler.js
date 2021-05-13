@@ -1,9 +1,10 @@
+const path = require('path');
+const mkdirP = require('mkdirP'); // 递归创建文件夹
 const { Tapable, AsyncSeriesHook, SyncBailHook, AsyncParallelHook, SyncHook } = require('tapable');
 const NormalModuleFactory = require('./NormalModuleFactory');
 const Compilation = require('./Compilation');
 const Stats = require('./Stats');
-const mkdirP = require('mkdirP'); // 递归创建文件夹
-const path = require('path');
+
 class Compiler extends Tapable {
   constructor (context) {
     super();
