@@ -1,5 +1,4 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   context: process.cwd(), // 当前工作目录
@@ -10,10 +9,5 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: 'main.js',
     chunkFilename: '[name].js'
-  },
-  plugins: [
-    // new HtmlWebpackPlugin({
-    //   template: './src/index.html'
-    // })
-  ]
+  }
 }
