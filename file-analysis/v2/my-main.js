@@ -37,7 +37,6 @@
     let promise = new Promise(function (resolve, reject) {
       installedChunkData = [resolve, reject];
     });
-    // 为啥加promise
     installedChunkData.push(promise); // [resolve, reject, promise]
     installedChunks[chunkId] = installedChunkData;
 
