@@ -144,18 +144,3 @@ class NormalModule {
 }
 
 module.exports = NormalModule;
-
-/**
- * 非常重要的问题
- *  模块ID的问题
- *  在webpack中，不管你是相对的本地模块，还是第三方模块
- *  最后它的moduleId，全部都是一个相对于项目根目录的绝对路径
- *  ./src/title.js
- *  ./src/index.js
- */
-
-/**
- * 如何处理懒加载
- * 1. 先把代码转成AST语法树
- * 2. 找出动态import节点
- */
