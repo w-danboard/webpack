@@ -55,7 +55,7 @@ class NormalModule {
               let extName = moduleName.split(path.posix.sep).pop().indexOf('.') == -1 ? '.js' : '';
               // 获取依赖模块的绝对路径
               depResource = path.posix.join(path.posix.dirname(this.resource), moduleName + extName);
-            } else { // 否则是一个第三方模块，也就是放在node_modules里面的 / \
+            } else { // 否则是一个第三方模块，也就是放在node_modules里面的
               // /Users/wanglin/Desktop/webpack-not-del/hand-webpack/node_modules/isarray/index.js
               depResource = require.resolve(path.posix.join(this.context, 'node_modules', moduleName));
               depResource = depResource.replace(/\\/g, '/'); // 把window里的\转成/
